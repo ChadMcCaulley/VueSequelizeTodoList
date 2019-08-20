@@ -1,0 +1,23 @@
+{
+  "name": "todolist",
+  "version": "1.0.0",
+  "description": "A todolist application that allows users to create and update todos ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://cmccaull@bitbucket.org/allcores/todolist.git"
+  },
+  "author": "Emily Laffrey and Chad McCaulley",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/allcores/todolist#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^1.19.1",
+    "sequelize": "^5.15.1",
+    "sqlite3": "^4.1.0"
+  }
+}
