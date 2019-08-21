@@ -5,7 +5,8 @@ const {getMaxImportance, getMinImportance} = require("../../test");
 
 
 router.get("/", (req, res) => {
-    Todo.findAll()
+    Todo
+        .findAll({order: [["importance", "DESC"]]})
         .then(todos => res.json(todos))
         .catch(err => console.log(err));
 })

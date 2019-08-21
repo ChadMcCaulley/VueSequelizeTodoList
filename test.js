@@ -1,6 +1,6 @@
-const {Todo} = require("./src/sqlite");
+const { Todo } = require("./src/sqlite");
 
-async function getMaxImportance(){
+async function getMaxImportance() {
     let result;
     await Todo.max("importance")
         .then(max => result = max)
@@ -8,7 +8,7 @@ async function getMaxImportance(){
     return result;
 }
 
-async function getMinImportance(){
+async function getMinImportance() {
     let result;
     await Todo.min("importance")
         .then(min => result = min)
@@ -16,7 +16,31 @@ async function getMinImportance(){
     return result;
 }
 
+async function getImportance(nextImportance) {
+    let importance;
+
+    // If next importance is null, add to the top of the list 
+    if (!nextImportance) importance = Math.floor(await getMaxImportance()) + 1;
+
+    // Else, get the value between the following and previous todos
+    else {
+        let prevImportanceVal = Number.MIN_SAFE_INTEGER;
+        await Todo
+            .findAll()
+            .then(res => {
+                res.forEach(todo => {
+                    let nextVal = todo.dataValues.importance
+                    if (nextVal > prevImportanceVal && nextVal < nextImportance) prevImportanceVal = nextVal
+                })
+            })
+            .catch(err => console.log(err))
+        importance = (nextImportance + prevImportanceVal) / 2;
+    }
+    return importance;
+}
+
 module.exports = {
     getMaxImportance,
-    getMinImportance
+    getMinImportance,
+    getImportance
 }

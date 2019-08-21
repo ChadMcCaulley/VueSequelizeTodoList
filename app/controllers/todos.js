@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const { Todo } = require.main.require("./src/sqlite");
+const {getMaxImportance, getImportance} = require("../../test");
+
 
 const route = "/:id";
 
@@ -13,10 +15,12 @@ router.get(route, (req, res) => {
 })
 
 // Route for updating a given todo
-router.patch(route, (req, res) => {
+router.patch(route, async (req, res) => {
     const text = req.body.text;
     const color = req.body.color;
-    Todo.update({text, color}, { where: {id: req.params.id}});
+    const importance = await getImportance(req.body.nextImportance)
+
+    Todo.update({text, color, importance}, { where: {id: req.params.id}});
     res.send("The todo was updated");
 })
 
