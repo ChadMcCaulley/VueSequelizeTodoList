@@ -1,24 +1,44 @@
 const Sequelize = require("sequelize");
+const TodoModel = require("../app/models/todoModel")
 
-// Connect sequelize to the database
-const sequelize = new Sequelize({
-    dialect: "sqlite",
-    storage: "todoDB.sqlite",
-    define:{timestamps: true}
-})
+const models = [
+  { name: 'Todo', source: TodoModel }
+]
 
-// Check if sequelize is connected to database
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log('Connection has been established successfully.');
-  })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
-  });
+const config = {
+  dialect: "sqlite",
+  storage: "todoDB.sqlite",
+  define: { timestamps: true }
+}
 
-const Todo = sequelize.import("../app/models/todoModel");
+/**
+ * Intialize the Seqelize connection
+ * 
+ * Todo: make ASYNC
+ * 
+ * @param {*} config 
+ * @returns {object} object of models
+ */
+function sequelizeInstance(config) {
+  // Connect sequelize to the database
+  const sequelize = new Sequelize(config)
 
-Todo.sync();
+  // Check if sequelize is connected to database
+  sequelize
+    .authenticate()
+    .then(() => {
+      console.log('Connection has been established successfully.');
+    })
+    .catch(err => {
+      console.error('Unable to connect to the database:', err);
+    });
 
-module.exports = Todo;
+  return models.reduce((carry, model) => {
+    let entity = sequelize.import(model.name, model.source)
+    entity.sync()
+    carry[model.name] = entity
+    return carry
+  }, {})
+}
+
+module.exports = sequelizeInstance(config)
