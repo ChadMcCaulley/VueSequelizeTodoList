@@ -13,8 +13,9 @@ router.post("/", (req, res) => {
     const color = req.body.color;
     const text = req.body.text;
 
-    // Determine what the least important value is
-    
+    // Add to top
+
+    // Add to bottom
 
     // If there is not text provided, tell the frontend
     if (!text || text === "") res.send("Todos cannot be left blank");
