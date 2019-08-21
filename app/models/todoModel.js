@@ -3,8 +3,8 @@
 module.exports = (sequelize, DataTypes) => {
     const Todo = sequelize.define("Todo", {
         id: {
-            type: DataTypes.FLOAT,
-            allowNull: false,
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
             primaryKey: true
         },
         color: {
@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: false
         },
         importance: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.FLOAT,
             defaultValue: 1
         },
         text: {
