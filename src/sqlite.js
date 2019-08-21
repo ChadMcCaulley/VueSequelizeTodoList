@@ -17,30 +17,7 @@ sequelize
     console.error('Unable to connect to the database:', err);
   });
 
-// Create the todo table in the database
-const Todo = sequelize.define("todo", {
-    id: {
-        type: Sequelize.FLOAT,
-        allowNull: false,
-        primaryKey: true
-    },
-    color: {
-        type: Sequelize.STRING,
-        defaultValue: "#FFFFFF"
-    }, 
-    isDone: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false
-    }, 
-    importance: {
-        type: Sequelize.INTEGER,
-        defaultValue: 1
-    },
-    text: {
-        type: Sequelize.STRING,
-        allowNull: false
-    }
-});
+const Todo = sequelize.import("../app/models/todoModel");
 
 Todo.sync();
 
