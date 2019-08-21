@@ -19,20 +19,18 @@ async function getMinImportance() {
 
 async function getImportance(nextImportance) {
     let importance;
-
-    // If next importance is null, add to the top of the list 
-    if (!nextImportance) importance = Math.floor(await getMaxImportance()) + 1;
-
-    // Else, get the value between the following and previous todos
-    else {
+    if (!nextImportance) {
+        importance = Math.floor(await getMaxImportance()) + 1;
+    } else {
         let prevImportanceVal = Number.MIN_SAFE_INTEGER;
         await Todo
             .findAll({ where: { importance: {[Op.lt]: nextImportance}}})
             .then(res => {
                 res.forEach(todo => {
                     let next = todo.dataValues.importance;
-                    if(next > prevImportanceVal)
+                    if(next > prevImportanceVal){
                         prevImportanceVal = next;
+                    }
                 })
             })
             .catch(err => console.log(err))
