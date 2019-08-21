@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const Todo = require("../../src/sqlite");
+const Todo = require.main.require("./src/sqlite");
 
 // Route for getting, updating, and deleting a todo based on an id
 const route = "/:id";
 router.get(route, (req, res, next) => {
-    console.log(req).id;
+    console.log(req);
     const reqId = 1;
     Todo.findOne({ where: { id: reqId } })
         .then(todo => res.send(todo))
