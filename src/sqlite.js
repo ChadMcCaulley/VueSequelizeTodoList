@@ -20,14 +20,13 @@ sequelize
 // Create the todo table in the database
 const Todo = sequelize.define("todo", {
     id: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.FLOAT,
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true
     },
     color: {
         type: Sequelize.STRING,
-        defaultValue: "FFFFFF"
+        defaultValue: "#FFFFFF"
     }, 
     isDone: {
         type: Sequelize.BOOLEAN,
@@ -44,3 +43,5 @@ const Todo = sequelize.define("todo", {
 });
 
 Todo.sync();
+
+module.exports = Todo;
