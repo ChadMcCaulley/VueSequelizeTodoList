@@ -1,4 +1,5 @@
 const { Todo } = require("./src/sqlite");
+const Op = require("sequelize").Op;
 
 async function getMaxImportance() {
     let result;
@@ -26,11 +27,12 @@ async function getImportance(nextImportance) {
     else {
         let prevImportanceVal = Number.MIN_SAFE_INTEGER;
         await Todo
-            .findAll()
+            .findAll({ where: { importance: {[Op.lt]: nextImportance}}})
             .then(res => {
                 res.forEach(todo => {
-                    let nextVal = todo.dataValues.importance
-                    if (nextVal > prevImportanceVal && nextVal < nextImportance) prevImportanceVal = nextVal
+                    let next = todo.dataValues.importance;
+                    if(next > prevImportanceVal)
+                        prevImportanceVal = next;
                 })
             })
             .catch(err => console.log(err))
