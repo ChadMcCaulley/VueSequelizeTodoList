@@ -32,42 +32,27 @@ async function getMinImportance() {
  * @param {Integer / String} nextImportance
  * @returns {Integer / null}
  */
-async function getImportance(nextImportance) {  
-    if(nextImportance === "top") return await getMaxImportance() + 1;  
-    if(nextImportance === "bottom") return await getMinImportance() - 1;
-    const isValid = await isValidImportance(nextImportance);
-    if (isValid) {
-        let prevImportanceVal = Number.MIN_SAFE_INTEGER;
-        await Todo
-            .findAll({ where: { importance: { [Op.lt]: nextImportance } } })
-            .then(res => {
-                if (res === []) return;
-                res.forEach(todo => {
-                    let next = todo.dataValues.importance;
-                    if (next > prevImportanceVal) {
-                        prevImportanceVal = next;
-                    }
-                })
-
-            })
-            .catch(err => console.log(err))
-        if (prevImportanceVal === Number.MIN_SAFE_INTEGER) return await getMinImportance() - 1;
-        return (nextImportance + prevImportanceVal) / 2;
-    }
-    return null;
-}
-
-/**
- * 
- * @param {*} importance 
- * @return {boolean}
- */
-async function isValidImportance(importance) {
-    const max = await getMaxImportance();
+async function getImportance(nextImportance) {
     const min = await getMinImportance();
-    return importance <= max && importance >= min;
-}
+    const max = await getMaxImportance();
+    if (nextImportance > max || nextImportance === "top") return max + 1;
+    if (nextImportance < min || nextImportance === "bottom") return min - 1;
+    let prevImportanceVal = Number.MIN_SAFE_INTEGER;
+    await Todo
+        .findAll({ where: { importance: { [Op.lt]: nextImportance } } })
+        .then(res => {
+            res.forEach(todo => {
+                let next = todo.dataValues.importance;
+                if (next > prevImportanceVal) {
+                    prevImportanceVal = next;
+                }
+            })
 
+        })
+        .catch(err => console.log(err))
+    return (nextImportance + prevImportanceVal) / 2;
+
+}
 
 module.exports = {
     getMaxImportance,
