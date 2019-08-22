@@ -89,14 +89,15 @@ Returns:
 ```
 
 **api/todo/:id PATCH**  
-Payload can accept the following attributes: text {string}, color {string}, idDone {boolean}, nextImportance {float}. The updated todo will determine it's importance based on the importance of the todo above it. If the nextImportance is null, the todo will be added to the top. If no todo exists prior to the todo, it will be added to the end of the list.  
-If no todo was found with the given id, then an object with an err field will be returned
+Payload can accept the following attributes: text {string}, color {string}, idDone {boolean}, nextImportance {float, "top", or "bottom"}. The updated todo will determine it's importance based on the importance of the todo above it. If no todo exists prior to the todo, it will be added to the end of the list.  
+If nextImportance is marked as "bottom" or "top", the todo will be moved to that position. 
 
 ```js
 exmaple request: api/todo/15
 Payload: {
     text: "Do Homework",
-    color: "#000000"
+    color: "#000000",
+    nextImportance: "bottom"
 }
 
 Returns:
@@ -108,6 +109,12 @@ Returns:
     "text": "Do Homework",
     "createdAt": "2019-08-22T15:39:30.260Z",
     "updatedAt": "2019-08-22T16:39:23.864Z"
+}
+
+
+example request with invalid id
+Returns: {
+    err: "not found"
 }
 ```
 

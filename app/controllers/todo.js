@@ -10,29 +10,27 @@ router.get("/", (req, res) => {
         .then(todos => res.json(todos))
         .catch(err => console.log(err));
 })
+
 router.post("/", async (req, res) => {
     // Get the color and text from the request
-    const color = req.body.color;
     const text = req.body.text;
     const addToTop = req.body.addToTop;
+    let color = req.body.color;
     let importance;
 
     // Find current max and min importance
     addToTop ? importance = await getMaxImportance() + 1 : importance = await getMinImportance() - 1;
 
     // If there is not text provided, tell the frontend
-    if (!text || text === "") res.send("Todos cannot be left blank");
+    if (!text || text === "") return res.send("Todos cannot be left blank");
+
+    // Ensure that the color is valid. If not, set to default
+    if (!color || color.length !== 7 || !(/#{1}[0-9A-Fa-f]{6}/g.test(color))) color = "#FFFFFF";
 
     // Create the new todo 
     Todo
-        .create({
-            color,
-            text,
-            importance
-        })
-        .then((todo) => {
-            res.json(todo)
-        })
+        .create({text, color, importance})
+        .then((todo) => {res.json(todo)})
         .catch(err => console.log(err));
 });
 
