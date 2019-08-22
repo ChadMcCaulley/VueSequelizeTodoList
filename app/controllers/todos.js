@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { Todo } = require.main.require("./src/sqlite");
-const {getImportance, ensureValidColor} = require("../../test");
+const { getImportance } = require("../../test");
 
 
 const route = "/:id";
@@ -14,13 +14,14 @@ const route = "/:id";
  */
 async function filterTodoPatch(todoChanges) {
     let r = {}
+    const color = todoChanges.color;
 
     if (todoChanges.text) r.text = todoChanges.text
-    if (todoChanges.color) r.color = ensureValidColor(todoChanges.color);
+    if (color && color.length === 7 && /#{1}[0-9A-Fa-f]{6}/g.test(color)) r.color = color
     if (todoChanges.isDone) r.isDone = todoChanges.isDone
     if (todoChanges.nextImportance) {
         r.importance = await getImportance(todoChanges.nextImportance);
-        if(r.importance === null) delete r.importance
+        if (r.importance === null) delete r.importance
     }
 
     return r
@@ -40,22 +41,22 @@ router.patch(route, async (req, res) => {
 
     let filteredBody = await filterTodoPatch(req.body)
 
-    Todo.findOne({ where: {id: req.params.id}}).then(todo => {
+    Todo.findOne({ where: { id: req.params.id } }).then(todo => {
         // if is null!!! do own exception
-        if (!todo) return res.json({err: "not found"})
+        if (!todo) return res.json({ err: "not found" })
         todo.update(filteredBody).then(h => res.json(todo))
-    }).catch(err => {res.send(err)})
+    }).catch(err => { res.send(err) })
 
 })
 
 // Route for deleting a given todo
 router.delete(route, (req, res) => {
 
-    Todo.findOne({ where: {id: req.params.id}}).then(todo => {
+    Todo.findOne({ where: { id: req.params.id } }).then(todo => {
         // if is null!!! do own exception
-        if (!todo) return res.json({err: "not found"})
-        todo.destroy(req.body).then(h => res.json({success: true}))
-    }).catch(err => {res.send(err)})
+        if (!todo) return res.json({ err: "not found" })
+        todo.destroy(req.body).then(h => res.json({ success: true }))
+    }).catch(err => { res.send(err) })
 
 })
 
