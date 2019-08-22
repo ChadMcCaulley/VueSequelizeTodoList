@@ -1,46 +1,44 @@
 const Sequelize = require("sequelize");
+const TodoModel = require("../app/models/todoModel")
 
-// Connect sequelize to the database
-const sequelize = new Sequelize({
-    dialect: "sqlite",
-    storage: "todoDB.sqlite",
-    define:{timestamps: true}
-})
+const models = [
+  { name: 'Todo', source: TodoModel }
+]
 
-// Check if sequelize is connected to database
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log('Connection has been established successfully.');
-  })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
-  });
+const config = {
+  dialect: "sqlite",
+  storage: "todoDB.sqlite",
+  define: { timestamps: true }
+}
 
-// Create the todo table in the database
-const Todo = sequelize.define("todo", {
-    id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true
-    },
-    color: {
-        type: Sequelize.STRING,
-        defaultValue: "FFFFFF"
-    }, 
-    isDone: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false
-    }, 
-    importance: {
-        type: Sequelize.INTEGER,
-        defaultValue: 1
-    },
-    text: {
-        type: Sequelize.STRING,
-        allowNull: false
-    }
-});
+/**
+ * Intialize the Seqelize connection
+ * 
+ * Todo: make ASYNC
+ * 
+ * @param {*} config 
+ * @returns {object} object of models
+ */
+function sequelizeInstance(config) {
+  // Connect sequelize to the database
+  const sequelize = new Sequelize(config)
 
-Todo.sync();
+  // Check if sequelize is connected to database
+  sequelize
+    .authenticate()
+    .then(() => {
+      console.log('Connection has been established successfully.');
+    })
+    .catch(err => {
+      console.error('Unable to connect to the database:', err);
+    });
+
+  return models.reduce((carry, model) => {
+    let entity = sequelize.import(model.name, model.source)
+    entity.sync()
+    carry[model.name] = entity
+    return carry
+  }, {})
+}
+
+module.exports = sequelizeInstance(config)

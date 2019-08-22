@@ -1,18 +1,16 @@
 const express = require("express");
 const app = express();
-const path = require('path')
-const db = require("./src/sqlite");
+const routes = require("./routes");
+const bodyParser = require("body-parser");
 
 const PORT = process.env.PORT || 3000;
 
 // set up static folder
+app.use(bodyParser.json());
 app.use(express.static("static"));
+app.use(routes);
 
-// site index
-app.get('/', function(req, res) {
-    res.sendFile(path.join(__dirname + '/views/index.html'));
-});
-
+// begin running the app on the given port
 app.listen(PORT, () => {
     console.log(`Running on port: ${PORT}`);
 })
