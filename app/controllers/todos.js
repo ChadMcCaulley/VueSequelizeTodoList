@@ -28,7 +28,7 @@ async function filterTodoPatch(todoChanges) {
 router.get(route, (req, res) => {
     const reqId = req.params.id;
     Todo.findOne({ where: { id: reqId } })
-        .then(todo => !todo ? res.send(`No todo was found with id: ${reqId}`) : res.json(todo))
+        .then(todo => todo === null ? res.send(`No todo was found with id: ${reqId}`) : res.json(todo))
         .catch(err => console.log(err));
 })
 
