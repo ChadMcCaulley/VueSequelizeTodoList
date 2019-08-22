@@ -19,9 +19,7 @@ async function getMinImportance() {
 
 async function getImportance(nextImportance) {
     let importance;
-    if (!nextImportance) {
-        importance = Math.floor(await getMaxImportance()) + 1;
-    } else {
+    if(isValidImportance(nextImportance)){
         let prevImportanceVal = Number.MIN_SAFE_INTEGER;
         await Todo
             .findAll({ where: { importance: {[Op.lt]: nextImportance}}})
@@ -35,6 +33,9 @@ async function getImportance(nextImportance) {
             })
             .catch(err => console.log(err))
         importance = (nextImportance + prevImportanceVal) / 2;
+    } else {
+        console.log(req.dataValues.importance);
+        importance = req.dataValues.importance;
     }
     return importance;
 }

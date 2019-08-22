@@ -12,6 +12,7 @@ router.get(route, (req, res) => {
     Todo.findOne({ where: { id: reqId } })
         .then(todo => res.json(todo))
         .catch(err => console.log(err));
+    res.send(`No todo was found with id: ${reqId}`);
 })
 
 // Route for updating a given todo
