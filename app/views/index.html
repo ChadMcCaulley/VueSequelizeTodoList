@@ -8,6 +8,9 @@
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js"
         integrity="sha256-XmdRbTre/3RulhYk/cOBUMpYlaAp2Rpo/s556u0OIKk=" crossorigin="anonymous"></script>
+    <script src="//cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js"></script>
+
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="/styles.css">
@@ -18,34 +21,35 @@
     <div id="app">
         <h1 class="display-2"> To-do List</h1>
         <ul>
+            <draggable v-model="list" group="people" @change="log">
+                <li class="list-group-item" v-for='(task,index) in list'>
+                    <div>
+                        <input :readonly="task.readonly" :style="{ 'background-color': task.color }"
+                            v-model='task.text'>
+                        <div class="btn-group"><button type="button" class="btn btn-secondary"
+                                @click='deleteLine(index)'>Delete </button>
+                            <button v-if="task.readonly" type="button" class="btn btn-secondary"
+                                @click='task.readonly = false'>Edit</button>
+                            <div v-else>
+                                <button type="button" class="btn btn-secondary" @click='contentEdit(task)'>Save</button>
 
-            <li class="list-group-item" v-for='(task,index) in list'>
-                <div>
-                    <input :readonly="task.readonly" :style="{ 'background-color': task.color }" v-model='task.text'>
-                    <div class="btn-group"><button type="button" class="btn btn-secondary"
-                            @click='deleteLine(index)'>Delete </button>
-                        <button v-if="task.readonly" type="button" class="btn btn-secondary"
-                            @click='task.readonly = false'>Edit</button>
-                        <div v-else>
-                            <button type="button" class="btn btn-secondary" @click='contentEdit(task)'>Save</button>
-
-                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
-                                @click='colorChange(task)'>Color</button>
+                                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
+                                    @click='colorChange(task)'>Color</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </li>
+                </li>
 
-            <!-- <div class="dropdown-menu">
+                <!-- <div class="dropdown-menu">
                     <a class="dropdown-item" href="#">Yellow</a>
                     <a class="dropdown-item" href="#">Green</a>
                 </div> -->
 
 
-
+            </draggable>
         </ul>
         <input @keyup.enter='add' placeholder='Add a new task' v-model='newTask'>
-        <button type="button" class="btn btn-outline-dark" @click='add' > Add Task</button>
+        <button type="button" class="btn btn-outline-dark" @click='add'> Add Task</button>
     </div>
 </body>
 <script type="text/javascript" src="/script.js"></script>

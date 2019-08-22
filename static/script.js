@@ -1,6 +1,25 @@
 var app = new Vue({
     el: '#app',
     methods: {
+        log: function (event) {
+            let newIndex = event.moved.newIndex
+            let followsTaskId = false
+
+            if (newIndex !== 0) {
+                followsTaskId = this.list[newIndex - 1].id
+            }
+
+            let payLoad = { followsTask: followsTaskId }
+
+            axios.patch('/api/todo/' + this.list[newIndex].id, payLoad)
+                .then(function (response) {
+                    console.log(response);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+
+        },
         colorChange: function (task) {
             if (task.color == '#FFFFFF') {
                 task.color = 'red';
@@ -18,12 +37,10 @@ var app = new Vue({
             let parentThis = this;
             axios.delete('/api/todo/' + this.list[taskIndex].id)
                 .then(function (response) {
-                    // handle success
                     console.log(response);
                     parentThis.list.splice(taskIndex, 1)
                 })
                 .catch(function (error) {
-                    // handle error
                     console.log(error);
                 })
 
@@ -43,25 +60,16 @@ var app = new Vue({
                         console.log(error);
                     });
             }
-            /*if (this.newTask !== '') {
-                let newTask = {
-                    text: this.newTask,
-                    color: 'black',
-                    readonly: true
-                }
-                this.list.push(newTask)
-                this.newTask = '' */
+
 
         },
         contentEdit: function (task) {
             task.readonly = true
             axios.patch('/api/todo/' + task.id, task)
                 .then(function (response) {
-                    // handle success
                     console.log(response);
                 })
                 .catch(function (error) {
-                    // handle error
                     console.log(error);
                 })
 
@@ -78,12 +86,10 @@ var app = new Vue({
 
         axios.get('/api/todo')
             .then(function (response) {
-                // handle success
                 console.log(response.data);
                 response.data.forEach(parentThis.addTodo)
             })
             .catch(function (error) {
-                // handle error
                 console.log(error);
             });
 
