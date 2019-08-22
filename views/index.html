@@ -1,12 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link rel="stylesheet" href="/styles.css">
     <title>Document</title>
 </head>
+
 <body>
-    <h1> Hello world</h1>    
+    <div id="app">
+        <h1> To-do List</h1>
+        <ul>
+            <span>
+
+                <li v-for='(task,index) in list'>
+                    <input :readonly="task.readonly" :style="{ 'color': task.color }" v-model='task.text'>
+                    <button @click='contentEdit(task)'>Edit</button>
+                    <button @click='deleteLine(index)'>Delete </button>
+                    <button @click='colorChange(task)'>Color</button>
+
+
+                </li>
+            </span>
+        </ul>
+        <input @keyup.enter='add' placeholder='Add a new task' v-model='newTask'>
+        <button @click='add'> Add Task</button>
+    </div>
 </body>
+<script type="text/javascript" src="/script.js"></script>
+
 </html>
