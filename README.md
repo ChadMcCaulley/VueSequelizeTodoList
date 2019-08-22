@@ -89,13 +89,15 @@ Returns:
 ```
 
 **api/todo/:id PATCH**  
-Payload can accept the following attributes: text {string}, color {string}, idDone {boolean}, nextImportance {float or "top"}. The updated todo will determine it's importance based on the importance of the todo above it. If the nextImportance is null, the todo will be added to the top. If no todo exists prior to the todo, it will be added to the end of the list.  
+Payload can accept the following attributes: text {string}, color {string}, idDone {boolean}, nextImportance {float, "top", or "bottom"}. The updated todo will determine it's importance based on the importance of the todo above it. If no todo exists prior to the todo, it will be added to the end of the list.  
+If nextImportance is marked as "bottom" or "top", the todo will be moved to that position. 
 
 ```js
 exmaple request: api/todo/15
 Payload: {
     text: "Do Homework",
-    color: "#000000"
+    color: "#000000",
+    nextImportance: "bottom"
 }
 
 Returns:

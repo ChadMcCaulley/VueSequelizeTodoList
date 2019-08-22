@@ -34,6 +34,7 @@ async function getMinImportance() {
  */
 async function getImportance(nextImportance) {  
     if(nextImportance === "top") return await getMaxImportance() + 1;  
+    if(nextImportance === "bottom") return await getMinImportance() - 1;
     const isValid = await isValidImportance(nextImportance);
     if (isValid) {
         let prevImportanceVal = Number.MIN_SAFE_INTEGER;
