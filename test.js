@@ -1,6 +1,11 @@
 const { Todo } = require("./src/sqlite");
 const Op = require("sequelize").Op;
 
+/**
+ * Gets the max value of the importance column of the database
+ * @param {*}
+ * @returns {Integer}
+ */
 async function getMaxImportance() {
     let result;
     await Todo.max("importance")
@@ -9,6 +14,11 @@ async function getMaxImportance() {
     return result;
 }
 
+/**
+ * Gets the min value of the importance column of the database
+ * @param {*}
+ * @returns {Integer}
+ */
 async function getMinImportance() {
     let result;
     await Todo.min("importance")
@@ -17,6 +27,11 @@ async function getMinImportance() {
     return result;
 }
 
+/**
+ * Determines the correct importance value given the importance value of the following todo
+ * @param {Integer / String} nextImportance
+ * @returns {Integer / null}
+ */
 async function getImportance(nextImportance) {  
     if(nextImportance === "top") return await getMaxImportance() + 1;  
     const isValid = await isValidImportance(nextImportance);
@@ -41,6 +56,11 @@ async function getImportance(nextImportance) {
     return null;
 }
 
+/**
+ * 
+ * @param {*} importance 
+ * @return {boolean}
+ */
 async function isValidImportance(importance) {
     const max = await getMaxImportance();
     const min = await getMinImportance();
