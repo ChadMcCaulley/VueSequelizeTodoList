@@ -19,8 +19,9 @@
         <ul>
             <span>
 
-                <li class="list-group-item" v-for='(task,index) in list'>
-                    <input :readonly="task.readonly" :style="{ 'color': task.color }" v-model='task.text'>
+                <li class="list-group-item"  v-for='(task,index) in list'>
+                    <div >
+                    <input :readonly="task.readonly"  :style="{ 'background-color': task.color }" v-model='task.text'>
                     <div class="btn-group">
                     <button type="button" class="btn btn-secondary" @click='contentEdit(task)'>Edit</button>
                     <button type="button" class="btn btn-secondary" @click='deleteLine(index)'>Delete </button>
@@ -28,7 +29,7 @@
                     <div class="dropdown-menu">
                             <a class="dropdown-item" href="#">Yellow</a>
                             <a class="dropdown-item" href="#">Green</a>
-                          </div> </div>
+                          </div> </div></div>
 
                 </li>
             </span>
