@@ -18,7 +18,7 @@ router.post("/", async (req, res) => {
     let importance;
 
     // Find current max and min importance
-    addToTop === null ? importance = await getMaxImportance() + 1 : importance = await getMinImportance() - 1;
+    addToTop ? importance = await getMaxImportance() + 1 : importance = await getMinImportance() - 1;
 
     // If there is not text provided, tell the frontend
     if (!text || text === "") res.send("Todos cannot be left blank");
