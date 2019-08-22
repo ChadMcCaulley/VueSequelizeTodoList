@@ -23,7 +23,7 @@ router.post("/", async (req, res) => {
 
     // If there is not text provided, tell the frontend
     if (text === null || text === "") return res.send("Todos cannot be left blank");
-    if (color === null || color.length !== 7 || !(/[0-9A-Fa-f]{6}/g.test(color))) color = "#FFFFFF";
+    if (color === null || color.length !== 7 || !(/#{1}[0-9A-Fa-f]{6}/g.test(color))) color = "#FFFFFF";
 
     // Create the new todo 
     Todo
