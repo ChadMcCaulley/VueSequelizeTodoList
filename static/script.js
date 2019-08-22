@@ -8,7 +8,7 @@ var app = new Vue({
                 task.color = 'green';
             } else if (task.color == 'green') {
                 task.color = 'blue';
-            } else if (task.color == 'blue') {
+            } else  {
                 task.color = 'black';
             }
 
@@ -29,15 +29,31 @@ var app = new Vue({
         },
         contentEdit: function (task) {
             task.readonly = !task.readonly
+        },
+        addTodo: function(todo){
+            todo.readonly = true;
+            this.list.push(todo)
+            console.log('addTodo');
         }
 
     },
+    mounted: function () {
+        let parentThis = this;
+
+        axios.get('/api/todo')
+            .then(function (response) {
+                // handle success
+                console.log(response.data);
+                response.data.forEach(parentThis.addTodo)
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            });
+
+    },
     data: {
-        list: [{
-            text: 'Walk dogs',
-            color: 'black',
-            readonly: true
-        }],
+        list: [],
         newTask: "",
     }
 });
