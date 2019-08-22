@@ -40,6 +40,12 @@ async function getImportance(nextImportance) {
     return importance;
 }
 
+async function isValidImportance(importance){
+    const max = await getMaxImportance();
+    const min = await getMinImportance();
+    return importance <= max && importance >= min;
+}
+
 module.exports = {
     getMaxImportance,
     getMinImportance,
