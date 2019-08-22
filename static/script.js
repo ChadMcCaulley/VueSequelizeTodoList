@@ -26,8 +26,8 @@ var app = new Vue({
                     // handle error
                     console.log(error);
                 })
-      
-            },
+
+        },
 
         add: function () {
             let parentThis = this;
@@ -54,7 +54,17 @@ var app = new Vue({
 
         },
         contentEdit: function (task) {
-            task.readonly = !task.readonly
+            task.readonly = true
+            axios.patch('/api/todo/' + task.id, task)
+                .then(function (response) {
+                    // handle success
+                    console.log(response);
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                })
+
         },
         addTodo: function (todo) {
             todo.readonly = true;

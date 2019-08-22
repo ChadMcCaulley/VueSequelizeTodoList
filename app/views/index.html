@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js" integrity="sha256-XmdRbTre/3RulhYk/cOBUMpYlaAp2Rpo/s556u0OIKk=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js"
+        integrity="sha256-XmdRbTre/3RulhYk/cOBUMpYlaAp2Rpo/s556u0OIKk=" crossorigin="anonymous"></script>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="/styles.css">
@@ -15,24 +16,33 @@
 
 <body>
     <div id="app">
-        <h1 class = "display-2"> To-do List</h1>
+        <h1 class="display-2"> To-do List</h1>
         <ul>
-            <span>
 
-                <li class="list-group-item"  v-for='(task,index) in list'>
-                    <div >
-                    <input :readonly="task.readonly"  :style="{ 'background-color': task.color }" v-model='task.text'>
-                    <div class="btn-group">
-                    <button type="button" class="btn btn-secondary" @click='contentEdit(task)'>Edit</button>
-                    <button type="button" class="btn btn-secondary" @click='deleteLine(index)'>Delete </button>
-                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" @click='colorChange(task)'>Color</button>
-                    <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">Yellow</a>
-                            <a class="dropdown-item" href="#">Green</a>
-                          </div> </div></div>
+            <li class="list-group-item" v-for='(task,index) in list'>
+                <div>
+                    <input :readonly="task.readonly" :style="{ 'background-color': task.color }" v-model='task.text'>
+                    <div class="btn-group"><button type="button" class="btn btn-secondary"
+                            @click='deleteLine(index)'>Delete </button>
+                        <button v-if="task.readonly" type="button" class="btn btn-secondary"
+                            @click='task.readonly = false'>Edit</button>
+                        <div v-else>
+                            <button type="button" class="btn btn-secondary" @click='contentEdit(task)'>Save</button>
 
-                </li>
-            </span>
+                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
+                                @click='colorChange(task)'>Color</button>
+                        </div>
+                    </div>
+                </div>
+            </li>
+
+            <!-- <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#">Yellow</a>
+                    <a class="dropdown-item" href="#">Green</a>
+                </div> -->
+
+
+
         </ul>
         <input @keyup.enter='add' placeholder='Add a new task' v-model='newTask'>
         <button type="button" class="btn btn-outline-dark" @click='add'> Add Task</button>
