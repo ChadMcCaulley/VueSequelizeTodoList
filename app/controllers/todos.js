@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { Todo } = require.main.require("./src/sqlite");
-const {getImportance} = require("../../test");
+const {getImportance, ensureValidColor} = require("../../test");
 
 
 const route = "/:id";
@@ -16,7 +16,7 @@ async function filterTodoPatch(todoChanges) {
     let r = {}
 
     if (todoChanges.text) r.text = todoChanges.text
-    if (todoChanges.color) r.color = todoChanges.color
+    if (todoChanges.color) r.color = ensureValidColor(todoChanges.color);
     if (todoChanges.isDone) r.isDone = todoChanges.isDone
     if (todoChanges.nextImportance) {
         r.importance = await getImportance(todoChanges.nextImportance);

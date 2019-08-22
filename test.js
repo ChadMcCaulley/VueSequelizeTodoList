@@ -47,8 +47,14 @@ async function isValidImportance(importance) {
     return importance <= max && importance >= min;
 }
 
+function ensureValidColor(color) {
+    if (!color || color.length !== 7 || !(/#{1}[0-9A-Fa-f]{6}/g.test(color))) color = "#FFFFFF";
+    return color;
+}
+
 module.exports = {
     getMaxImportance,
     getMinImportance,
-    getImportance
+    getImportance,
+    ensureValidColor
 }
