@@ -30,28 +30,24 @@ async function getMinImportance() {
 /**
  * Determines the correct importance value given the importance value of the following todo
  * @param {Integer / String} nextImportance
- * @returns {Integer / null}
+ * @returns {Integer}
  */
 async function getImportance(nextImportance) {
     const min = await getMinImportance();
     const max = await getMaxImportance();
-    if (nextImportance > max || nextImportance === "top") return max + 1;
-    if (nextImportance < min || nextImportance === "bottom") return min - 1;
+    if (nextImportance === "top") return max + 1;
+    if (nextImportance <= min) return min - 1;
     let prevImportanceVal = Number.MIN_SAFE_INTEGER;
     await Todo
         .findAll({ where: { importance: { [Op.lt]: nextImportance } } })
         .then(res => {
             res.forEach(todo => {
                 let next = todo.dataValues.importance;
-                if (next > prevImportanceVal) {
-                    prevImportanceVal = next;
-                }
+                if (next > prevImportanceVal) prevImportanceVal = next;
             })
-
         })
         .catch(err => console.log(err))
     return (nextImportance + prevImportanceVal) / 2;
-
 }
 
 module.exports = {
