@@ -6,29 +6,55 @@ const {getMaxImportance, getImportance} = require("../../test");
 
 const route = "/:id";
 
+
+/**
+ * Filters a request body to just text/color/isDone/importance
+ * @param {object} todoChanges 
+ * @returns {object}
+ */
+async function filterTodoPatch(todoChanges) {
+    let r = {}
+
+    if (todoChanges.text) r.text = todoChanges.text
+    if (todoChanges.color) r.color = todoChanges.color
+    if (todoChanges.isDone) r.isDone = todoChanges.isDone
+    if (todoChanges.nextImportance) r.importance = 
+        await getImportance(req.body.nextImportance)
+
+    return r
+}
+
 // Route for getting a todo based on the id
 router.get(route, (req, res) => {
     const reqId = req.params.id;
     Todo.findOne({ where: { id: reqId } })
-        .then(todo => res.json(todo))
+        .then(todo => !todo ? res.send(`No todo was found with id: ${reqId}`) : res.json(todo))
         .catch(err => console.log(err));
-    res.send(`No todo was found with id: ${reqId}`);
 })
+
 
 // Route for updating a given todo
 router.patch(route, async (req, res) => {
-    const text = req.body.text;
-    const color = req.body.color;
-    const importance = await getImportance(req.body.nextImportance)
 
-    Todo.update({text, color, importance}, { where: {id: req.params.id}});
-    res.send("The todo was updated");
+    let filteredBody = await filterTodoPatch(req.body)
+
+    Todo.findOne({ where: {id: req.params.id}}).then(todo => {
+        // if is null!!! do own exception
+        if (!todo) return res.json({err: "not found"})
+        todo.update(filteredBody).then(h => res.json(todo))
+    }).catch(err => {res.send(err)})
+
 })
 
 // Route for deleting a given todo
 router.delete(route, (req, res) => {
-    Todo.destroy({ where: { id: req.params.id }});
-    res.send("The todo was deleted");
+
+    Todo.findOne({ where: {id: req.params.id}}).then(todo => {
+        // if is null!!! do own exception
+        if (!todo) return res.json({err: "not found"})
+        todo.destroy(req.body).then(h => res.json({success: true}))
+    }).catch(err => {res.send(err)})
+
 })
 
 module.exports = router;
