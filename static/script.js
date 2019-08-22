@@ -13,9 +13,21 @@ var app = new Vue({
             }
 
         },
+
         deleteLine: function (taskIndex) {
-            this.list.splice(taskIndex, 1)
-        },
+            let parentThis = this;
+            axios.delete('/api/todo/' + this.list[taskIndex].id)
+                .then(function (response) {
+                    // handle success
+                    console.log(response);
+                    parentThis.list.splice(taskIndex, 1)
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                })
+      
+            },
 
         add: function () {
             let parentThis = this;
@@ -39,18 +51,18 @@ var app = new Vue({
                 }
                 this.list.push(newTask)
                 this.newTask = '' */
-        
-    },
-    contentEdit: function (task) {
-        task.readonly = !task.readonly
-    },
-    addTodo: function (todo) {
-        todo.readonly = true;
-        this.list.push(todo)
-        console.log('addTodo');
-    }
 
-},
+        },
+        contentEdit: function (task) {
+            task.readonly = !task.readonly
+        },
+        addTodo: function (todo) {
+            todo.readonly = true;
+            this.list.push(todo)
+            console.log('addTodo');
+        }
+
+    },
     mounted: function () {
         let parentThis = this;
 
