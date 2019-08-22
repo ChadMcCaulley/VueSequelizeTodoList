@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { Todo } = require.main.require("./src/sqlite");
-const { getImportance } = require("../../test");
+const { getImportance, getMaxImportance } = require("../../test");
 
 
 const route = "/:id";
@@ -19,11 +19,22 @@ async function filterTodoPatch(todoChanges) {
     if (todoChanges.text) r.text = todoChanges.text
     if (color && color.length === 7 && /#{1}[0-9A-Fa-f]{6}/g.test(color)) r.color = color
     if (todoChanges.isDone !== null && typeof todoChanges.isDone === "boolean") r.isDone = todoChanges.isDone
-    if (todoChanges.nextImportance) {
-        r.importance = await getImportance(todoChanges.nextImportance);
-        if (r.importance === null) delete r.importance
+
+    if (todoChanges.followsTask === false) {
+        r.importance = await getMaxImportance() + 1;
+        return r
     }
 
+    try {            
+        let nextImportance;        
+        let todo  = await Todo.findOne({ where: { id: todoChanges.followsTask } })
+        if (todo !== null) nextImportance = todo.dataValues.importance;
+        else nextImportance = "top";
+        r.importance = await getImportance(nextImportance);
+    } catch (err) {
+        console.log(err)
+    }
+    
     return r
 }
 
