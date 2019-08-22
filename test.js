@@ -17,30 +17,31 @@ async function getMinImportance() {
     return result;
 }
 
-async function getImportance(nextImportance) {
-    let importance;
-    if(isValidImportance(nextImportance)){
+async function getImportance(nextImportance) {  
+    if(nextImportance === "top") return await getMaxImportance() + 1;  
+    const isValid = await isValidImportance(nextImportance);
+    if (isValid) {
         let prevImportanceVal = Number.MIN_SAFE_INTEGER;
         await Todo
-            .findAll({ where: { importance: {[Op.lt]: nextImportance}}})
+            .findAll({ where: { importance: { [Op.lt]: nextImportance } } })
             .then(res => {
+                if (res === []) return;
                 res.forEach(todo => {
                     let next = todo.dataValues.importance;
-                    if(next > prevImportanceVal){
+                    if (next > prevImportanceVal) {
                         prevImportanceVal = next;
                     }
                 })
+
             })
             .catch(err => console.log(err))
-        importance = (nextImportance + prevImportanceVal) / 2;
-    } else {
-        console.log(req.dataValues.importance);
-        importance = req.dataValues.importance;
+        if (prevImportanceVal === Number.MIN_SAFE_INTEGER) return await getMinImportance() - 1;
+        return (nextImportance + prevImportanceVal) / 2;
     }
-    return importance;
+    return null;
 }
 
-async function isValidImportance(importance){
+async function isValidImportance(importance) {
     const max = await getMaxImportance();
     const min = await getMinImportance();
     return importance <= max && importance >= min;
