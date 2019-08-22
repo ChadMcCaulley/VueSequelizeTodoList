@@ -14,10 +14,9 @@ const route = "/:id";
  */
 async function filterTodoPatch(todoChanges) {
     let r = {}
-    const color = todoChanges.color;
 
     if (todoChanges.text) r.text = todoChanges.text
-    if (color && color.length === 7 && /#{1}[0-9A-Fa-f]{6}/g.test(color)) r.color = color
+    if (todoChanges.color) r.color = todoChanges.color
     if (todoChanges.isDone !== null && typeof todoChanges.isDone === "boolean") r.isDone = todoChanges.isDone
 
     if (todoChanges.followsTask === false) {
@@ -34,7 +33,7 @@ async function filterTodoPatch(todoChanges) {
     } catch (err) {
         console.log(err)
     }
-    
+
     return r
 }
 
