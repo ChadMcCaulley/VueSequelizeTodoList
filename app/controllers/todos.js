@@ -18,7 +18,7 @@ async function filterTodoPatch(todoChanges) {
 
     if (todoChanges.text) r.text = todoChanges.text
     if (color && color.length === 7 && /#{1}[0-9A-Fa-f]{6}/g.test(color)) r.color = color
-    if (todoChanges.isDone) r.isDone = todoChanges.isDone
+    if (todoChanges.isDone !== null) r.isDone = todoChanges.isDone
     if (todoChanges.nextImportance) {
         r.importance = await getImportance(todoChanges.nextImportance);
         if (r.importance === null) delete r.importance
