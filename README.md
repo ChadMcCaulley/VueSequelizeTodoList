@@ -62,7 +62,7 @@ Returns:
     "isDone": false,
     "id": 15,
     "text": "Do Homework",
-    "importance": -4503599627370496,
+    "importance": 7,
     "updatedAt": "2019-08-22T15:39:30.260Z",
     "createdAt": "2019-08-22T15:39:30.260Z"
 }
@@ -81,7 +81,7 @@ Returns:
     "id": 13,
     "color": "#FFFFFF",
     "isDone": false,
-    "importance": 17,
+    "importance": 8,
     "text": "Walk the dog",
     "createdAt": "2019-08-21T22:58:07.187Z",
     "updatedAt": "2019-08-22T15:05:39.848Z"
@@ -93,6 +93,7 @@ Payload can accept the following attributes: text {string}, color {string}, idDo
 If no todo was found with the given id, then an object with an err field will be returned
 
 ```js
+exmaple request: api/todo/15
 Payload: {
     text: "Do Homework",
     color: "#000000"
@@ -103,7 +104,7 @@ Returns:
     "id": 15,
     "color": "#000000",
     "isDone": false,
-    "importance": 15,
+    "importance": 7,
     "text": "Do Homework",
     "createdAt": "2019-08-22T15:39:30.260Z",
     "updatedAt": "2019-08-22T16:39:23.864Z"
